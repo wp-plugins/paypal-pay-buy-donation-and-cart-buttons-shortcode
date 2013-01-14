@@ -21,8 +21,6 @@ This plugin adds "paypal_button" shortcode to display pay now, buy now, donation
 
 Set your PayPal E-Mail address and Checkout page customization in Settings->PayPal Buttons.
 
-Please visit "Other Notes" for detailed attributes.
-
 = Usage =
 
     [paypal_button type="paynow|buynow|donate|cart" amount="100"]

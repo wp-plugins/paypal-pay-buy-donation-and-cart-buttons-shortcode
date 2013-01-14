@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Paypal Pay, Buy, Donation and Cart Buttons Shortcode
-Plugin URI: http://mohsinrasool.wordpress.com/paypal-pay-buy-donation-cart-button-wordpress-shortcode
+Plugin URI: http://wordpress.org/extend/plugins/paypal-pay-buy-donation-and-cart-buttons-shortcode/screenshots/
 Description: Add a "paypal_button" shortcode to display pay now, buy now, donation and add to cart PayPal buttons with facility to customize they paypal checkout page.
 Version: 1.0
 Author: Mohsin Rasool
