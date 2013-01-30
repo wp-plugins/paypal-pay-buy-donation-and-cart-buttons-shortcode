@@ -3,7 +3,7 @@
 Plugin Name: Paypal Pay, Buy, Donation and Cart Buttons Shortcode
 Plugin URI: http://mohsinrasool.wordpress.com/2013/01/11/wordpress-shortcode-for-paypal-pay-buy-donation-and-cart-buttons/
 Description: Add a "paypal_button" shortcode to display pay now, buy now, donation and add to cart PayPal buttons with facility to customize they paypal checkout page.
-Version: 1.0
+Version: 1.1
 Author: Mohsin Rasool
 Author URI: http://mohsinrasool.wordpress.com
 License: GPL2
@@ -31,6 +31,9 @@ function wpdev_paypal_button($atts, $content = null) {
     'name' => get_option('wpdev_paypal_button_name'),
     'id' => '',
     'amount' => '',
+    'quantity' => '1',
+    'quantity_txt_postfix' => '',
+    'field_sep'=>'',
     'currency' => get_option('wpdev_paypal_button_currency'),
     'tax_rate' => get_option('wpdev_paypal_button_tax_rate'),
     'shipping_charges' => get_option('wpdev_paypal_button_shipping_charges'),
@@ -76,21 +79,20 @@ function wpdev_paypal_button($atts, $content = null) {
     }
     elseif($type=='cart'){
         $cmd = '_cart';
-        $add = '1';
         $button_subtype = 'product';
         $btn_text = 'ShopCart';
         $btn = 'btn_cart';
     }
 
-    if($btn_size=='large' && $btn!='btn_cart') {
+    if($btn_size=='large' && $btn!='btn_cart')
         $btn .= ( (strtolower($btn_display_cc)=='no' || empty($btn_display_cc)  ) ) ? '': 'CC';
-    }
     else
         $btn .= '';
     
     $btn .= ($btn_size=='large') ? '_LG': '_SM';
     $bn = 'PP-'.$btn_text.'BF:'.$btn.'.gif:NonHostedGuest';
     $btn_src = 'https://www.paypalobjects.com/en_US/i/btn/'.$btn.'.gif';
+    
     
     $output = '<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
 <input type="hidden" name="cmd" value="'.$cmd.'">
@@ -109,8 +111,39 @@ function wpdev_paypal_button($atts, $content = null) {
         $output .= '<input type="hidden" name="tax_rate" value="'.$tax_rate.'">';
     if(!empty($shipping_charges))
         $output .= '<input type="hidden" name="shipping" value="'.$shipping_charges.'">';
-    if(!empty($add))
+    if(is_numeric($add))
         $output .= '<input type="hidden" name="add" value="'.$add.'">';
+    else if(strpos($quantity, '-')!==false){
+        
+        $quantity = explode('-',$quantity);
+        print_r($quantity);
+        if(is_numeric($quantity[0]) && is_numeric($quantity[1]) && $quantity[0]<$quantity[1]) {
+            $output .= '<select name="quantity" class="paypal_quantity">';
+            for($i=$quantity[0]; $i<=$quantity[1]; $i++)
+                $output .= '<option value="'.$i.'"> '.$i.$quantity_txt_postfix.' </option>';
+            $output .= '</select>'.html_entity_decode($field_sep);
+        }
+        else
+            $output .= '<input type="hidden" name="add" value="1">';
+    }
+    else if(strpos($quantity, ',')){
+        $quantity = explode(',',$quantity);
+        if(count($quantity)>0) {
+            $output .= '<select name="quantity" class="paypal_quantity">';
+            for($i=0; $i<count($quantity); $i++){
+                if(is_numeric($quantity[$i]))
+                    $output .= '<option value="'.$quantity[$i].'"> '.$quantity[$i].$quantity_txt_postfix.' </option>';
+            }
+            $output .= '</select>'.html_entity_decode($field_sep);
+        }
+        else
+            $output .= '<input type="hidden" name="add" value="1">';
+    }
+    else if($quantity=="")
+        $output .= '<input type="text" name="add" value="1" class="paypal_quantity">';
+    else
+        $output .= '<input type="hidden" name="add" value="1">';
+
     if(!empty($checkout_logo_url))
         $output .= '<input type="hidden" name="cpp_header_image" value="'.$checkout_logo_url.'">';
     if(!empty($checkout_header_bg_color))

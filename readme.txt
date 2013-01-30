@@ -3,8 +3,8 @@ Contributors: mohsinrasool
 Donate link: http://mohsinrasool.wordpress.com/2013/01/11/wordpress-shortcode-for-paypal-pay-buy-donation-and-cart-buttons/
 Tags: paypal, pay now, buy now, add to cart, shopping cart, donation, donate, pay button, cart button, paypal payment, paypal checkout, donate now
 Requires at least: 3.0.1
-Tested up to: 3.5
-Stable tag: 1.0
+Tested up to: 3.5.1
+Stable tag: 1.1
 Author: Mohsin Rasool
 License: GPLv2
 
@@ -46,6 +46,18 @@ Set your PayPal E-Mail address and Checkout page customization in Settings->PayP
     **amount**: 
     (numeric) (optional) Product price to be charged. Yes, you can left empty for user to input amount. This can be used for donations.
     Possible Values: Any numeric value
+
+    **quantity**: 
+    (numeric or string) (optional) Specfiy quantity as number or range or possible comma separated values. Leave empty to let user specify any quantity.
+    Possible Values: "1" or "1,5,10" or "1-10"
+
+    **quantity_txt_postfix**: 
+    (string) (optional) Post fix text to be shown in quantity dropdown.
+    Possible Values: " items" or " products"
+
+    **field_sep**: 
+    (string) (optional) HTML code to separate the generated visible HTML fields. Use "<br />" for new line.
+    Possible Values: "&nbsp;" or "<br />"
 
     **currency**: 
     (string) (optional) Currency of the Transaction. 
@@ -122,7 +134,15 @@ You can use Logo URL field in the admin settings to place your logo on checkout 
 
 == Changelog ==
 
+= 1.1 =
+* Customizable Quantity attribute
+* Quantity Text Postfix
+* Added Field Seperator
+
 = 1.0 =
 * First Revision
 
 == Upgrade Notice ==
+
+= 1.1 =
+* Added Quantity drop down or text box feature to be selected by the user.
