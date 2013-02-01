@@ -60,7 +60,6 @@ function wpdev_paypal_button($atts, $content = null) {
     
     if(empty($id))
         $id = (!empty($post)) ? $post->ID : rand(100,1000);
-    $id = rand(100,1000);
     
     if(strpos(strtolower($type),'pay') !== false){
         $cmd = '_xclick';
