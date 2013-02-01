@@ -4,7 +4,7 @@ Donate link: http://mohsinrasool.wordpress.com/2013/01/11/wordpress-shortcode-fo
 Tags: paypal, pay now, buy now, add to cart, shopping cart, donation, donate, pay button, cart button, paypal payment, paypal checkout, donate now
 Requires at least: 3.0.1
 Tested up to: 3.5.1
-Stable tag: 1.1
+Stable tag: 1.2
 Author: Mohsin Rasool
 License: GPLv2
 
@@ -58,6 +58,10 @@ Set your PayPal E-Mail address and Checkout page customization in Settings->PayP
     **field_sep**: 
     (string) (optional) HTML code to separate the generated visible HTML fields. Use "<br />" for new line.
     Possible Values: "&nbsp;" or "<br />"
+
+    **echo_link**: 
+    (boolean) (optional) Set to "1" for linked output
+    Possible Values: 1 or 0
 
     **currency**: 
     (string) (optional) Currency of the Transaction. 
@@ -134,6 +138,10 @@ You can use Logo URL field in the admin settings to place your logo on checkout 
 
 == Changelog ==
 
+= 1.2 =
+* Added quantity support for drop down box.
+* Added support for payment using URL. You can now use it in achor tag's "href" attribute also.
+
 = 1.1 =
 * Customizable Quantity attribute
 * Quantity Text Postfix
@@ -143,6 +151,11 @@ You can use Logo URL field in the admin settings to place your logo on checkout 
 * First Revision
 
 == Upgrade Notice ==
+
+= 1.2 =
+* Fixed quantity feature for donation 
+* Added support for payment using URL. You can now use it in achor tag's "href" attribute also.
+
 
 = 1.1 =
 * Added Quantity drop down or text box feature to be selected by the user.
