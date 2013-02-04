@@ -4,7 +4,7 @@ Donate link: http://mohsinrasool.wordpress.com/2013/01/11/wordpress-shortcode-fo
 Tags: paypal, pay now, buy now, add to cart, shopping cart, donation, donate, pay button, cart button, paypal payment, paypal checkout, donate now
 Requires at least: 3.0.1
 Tested up to: 3.5.1
-Stable tag: 1.2
+Stable tag: 1.3
 Author: Mohsin Rasool
 License: GPLv2
 
@@ -12,12 +12,25 @@ Adds a shortcode to display PayPal's pay now, buy now, donation and add to cart 
 
 == Description ==
 
-This plugin adds "paypal_button" shortcode to display pay now, buy now, donation and add to cart PayPal buttons with facility to customize they paypal checkout page. Possible usage of the plugin are as follows
+This plugin adds "paypal_button" shortcode to display pay now, buy now, donation and add to cart PayPal buttons with facility to customize their PayPal checkout page. Handy features of the plugins are
+
+- **Four types of button** Pay Now, Buy Now, Add to Cart, Donation
+- **Customizable quantity field** which is available as text box and drop down box with possible selected values or range of values for all types of buttons
+- **Customizable PayPal Payment Button**
+- **Customizable PayPal Checkout page**, change header logo and page color etc
+- **Output can be a PayPal form** with Default or Customizable PayPal button **or a URL to PayPal payment/cart page** that can be used on linked texts
+- **All type of PayPal button options** i.e. large, small, with and without Credit Card Logos 
+- **Set Thank you page** after successful payment to return the user back to your website
+- **Set Handling and Shipping charges**
+- **Allow buyer to add a note to order**
+
+Possible usage of the plugin are as follows
 
     Pay Now Button: [paypal_button type="paynow" amount="100"]
     Buy Now Button: [paypal_button type="buynow" name="WordPres Portfolio Theme" amount="100"]
     Donation Button: [paypal_button type="donate" amount="100"] 
     Add to cart Button: [paypal_button type="cart" name="Computer Table" amount="100"]
+    Payment Link: [paypal_button type="buynow" name="WordPres Portfolio Theme" amount="100" echo_link=1]
 
 Set your PayPal E-Mail address and Checkout page customization in Settings->PayPal Buttons.
 
@@ -74,6 +87,10 @@ Set your PayPal E-Mail address and Checkout page customization in Settings->PayP
     **shipping_charges**: 
     (numeric) (optional) Shipping charges for the product. 
     Possible Values: Any numeric value
+
+    **btn_url**: 
+    (string) (optional) Set URL of your own customizable button. Global setting is used when left empty or default PayPal Button
+    Possible Values: A URL to an image
 
     **btn_size**: 
     (string) (optional) Set size of the button either 'large' or 'small'.
@@ -138,6 +155,10 @@ You can use Logo URL field in the admin settings to place your logo on checkout 
 
 == Changelog ==
 
+= 1.3 =
+* Customize the Payment Button. Set your button's URL either in settings page or in shortcode
+* Fix Javascript error of quantity when used with buy now and cart buttons.
+
 = 1.2 =
 * Added quantity support for drop down box.
 * Added support for payment using URL. You can now use it in achor tag's "href" attribute also.
@@ -152,6 +173,9 @@ You can use Logo URL field in the admin settings to place your logo on checkout 
 
 == Upgrade Notice ==
 
+= 1.3 =
+* Added support for customizing the PayPal button.
+
 = 1.2 =
 * Fixed quantity feature for donation 
 * Added support for payment using URL. You can now use it in achor tag's "href" attribute also.
@@ -159,3 +183,4 @@ You can use Logo URL field in the admin settings to place your logo on checkout 
 
 = 1.1 =
 * Added Quantity drop down or text box feature to be selected by the user.
+* Fix a Javascript error related to quantity

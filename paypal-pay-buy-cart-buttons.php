@@ -3,7 +3,7 @@
 Plugin Name: Paypal Pay, Buy, Donation and Cart Buttons Shortcode
 Plugin URI: http://mohsinrasool.wordpress.com/2013/01/11/wordpress-shortcode-for-paypal-pay-buy-donation-and-cart-buttons/
 Description: Add a "paypal_button" shortcode to display pay now, buy now, donation and add to cart PayPal buttons with facility to customize they paypal checkout page.
-Version: 1.2
+Version: 1.3
 Author: Mohsin Rasool
 Author URI: http://mohsinrasool.wordpress.com
 License: GPL2
@@ -41,6 +41,7 @@ function wpdev_paypal_button($atts, $content = null) {
     'btn_size' => get_option('wpdev_paypal_button_size'),
     'btn_display_cc' => get_option('wpdev_paypal_button_display_cc'),
     'btn_text' => '',
+    'btn_url' => get_option('wpdev_paypal_button_custom_url'),
     'add_note'=>get_option('wpdev_paypal_button_add_note'),
     'thankyou_page_url'=> get_option('wpdev_paypal_button_thankyou_url'),
     'checkout_logo_url' => get_option('wpdev_paypal_button_logo_url'),
@@ -136,6 +137,9 @@ function wpdev_paypal_button($atts, $content = null) {
     if(!empty($thankyou_page_url))
         $paypal_values['return'] = $thankyou_page_url;
 
+    if(!empty($btn_url))
+        $btn_src = $btn_url;
+    
     if($echo_link) {
         
         if(!empty($quantity) && is_numeric($quantity))
@@ -189,14 +193,15 @@ function wpdev_paypal_button($atts, $content = null) {
         else
             $output .= '<input type="hidden" name="'.$quantity_field.'" value="1">';
 
-        $rand = rand(111,999);
-        $output .= '
-        <input type="image" src="'.$btn_src.'" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!" 
-            onclick="return adjustPayPalQuantity'.$rand.'(this);">
-        <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-        </form>
-        ';
         if(!empty($quantity) && ($type=='donation' || $type=='donate') ){
+            $rand = rand(111,999);        
+            $output .= '
+            <input type="image" src="'.$btn_src.'" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!" 
+                onclick="return adjustPayPalQuantity'.$rand.'(this);">
+            <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+            </form>
+            ';
+        
             $output .= '
             <script type="text/javascript">
                 function adjustPayPalQuantity'.$rand.'(elem){
@@ -208,6 +213,13 @@ function wpdev_paypal_button($atts, $content = null) {
                     }
                 }
             </script>';
+        }
+        else {
+            $output .= '
+            <input type="image" src="'.$btn_src.'" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!" >
+            <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+            </form>
+            ';
         }
 		
     }

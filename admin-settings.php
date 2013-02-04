@@ -19,6 +19,7 @@ function wpdev_register_paypal_button_settings() {
     register_setting('wpdev_paypal_button_options', 'wpdev_paypal_button_currency');
     register_setting('wpdev_paypal_button_options', 'wpdev_paypal_button_thankyou_url');
     register_setting('wpdev_paypal_button_options', 'wpdev_paypal_button_logo_url');
+    register_setting('wpdev_paypal_button_options', 'wpdev_paypal_button_custom_url');
     register_setting('wpdev_paypal_button_options', 'wpdev_paypal_button_checkout_header_border_color');
     register_setting('wpdev_paypal_button_options', 'wpdev_paypal_button_checkout_header_bg_color');
     register_setting('wpdev_paypal_button_options', 'wpdev_paypal_button_checkout_bg_color');
@@ -30,7 +31,7 @@ function wpdev_register_paypal_button_settings() {
 
     add_settings_section('wpdev_paypal_button_general_options', 'General Options', 'wpdev_paypal_button_general_options_code', 'wpdev_paypal_button_general_options');
     
-    add_settings_field('wpdev_paypal_button_type', 'Type of Paypal Button', 'wpdev_paypal_button_type', 'wpdev_paypal_button_general_options', 'wpdev_paypal_button_general_options');
+    add_settings_field('wpdev_paypal_button_type', 'Default Type of Paypal Button', 'wpdev_paypal_button_type', 'wpdev_paypal_button_general_options', 'wpdev_paypal_button_general_options');
     add_settings_field('wpdev_paypal_button_email', 'Paypal E-Mail Address', 'wpdev_paypal_button_email', 'wpdev_paypal_button_general_options', 'wpdev_paypal_button_general_options');
     add_settings_field('wpdev_paypal_button_name', 'Business/Product Name', 'wpdev_paypal_button_name', 'wpdev_paypal_button_general_options', 'wpdev_paypal_button_general_options');
     add_settings_field('wpdev_paypal_button_currency', 'Currency', 'wpdev_paypal_button_currency', 'wpdev_paypal_button_general_options', 'wpdev_paypal_button_general_options');
@@ -38,6 +39,7 @@ function wpdev_register_paypal_button_settings() {
     add_settings_field('wpdev_paypal_button_shipping_charges', 'Shipping Charges', 'wpdev_paypal_button_shipping_charges', 'wpdev_paypal_button_general_options', 'wpdev_paypal_button_general_options');
     add_settings_field('wpdev_paypal_button_add_note', 'Enable Note', 'wpdev_paypal_button_add_note', 'wpdev_paypal_button_general_options', 'wpdev_paypal_button_general_options');
     add_settings_field('wpdev_paypal_button_logo_url', 'Logo URL', 'wpdev_paypal_button_logo_url', 'wpdev_paypal_button_general_options', 'wpdev_paypal_button_general_options');
+    add_settings_field('wpdev_paypal_button_custom_url', 'Custom Payment Button', 'wpdev_paypal_button_custom_url', 'wpdev_paypal_button_general_options', 'wpdev_paypal_button_general_options');
     add_settings_field('wpdev_paypal_button_checkout_header_border_color', 'Checkout Page Border Color', 'wpdev_paypal_button_checkout_header_border_color', 'wpdev_paypal_button_general_options', 'wpdev_paypal_button_general_options');
     add_settings_field('wpdev_paypal_button_checkout_header_bg_color', 'Checkout Page Header Background Color', 'wpdev_paypal_button_checkout_header_bg_color', 'wpdev_paypal_button_general_options', 'wpdev_paypal_button_general_options');
     add_settings_field('wpdev_paypal_button_checkout_bg_color', 'Checkout Page Background Color', 'wpdev_paypal_button_checkout_bg_color', 'wpdev_paypal_button_general_options', 'wpdev_paypal_button_general_options');
@@ -55,6 +57,9 @@ function wpdev_register_paypal_button_settings() {
 
 
 
+function wpdev_paypal_button_custom_url() {
+    echo '<input id="wpdev_paypal_button_custom_url" name="wpdev_paypal_button_custom_url" type="text" value="' . get_option("wpdev_paypal_button_custom_url") . '" size=100 /> <br/>The URL to Custom Button instead of PayPal\'s default button. <br />';
+}
 
 function wpdev_paypal_button_general_options_code() {
     echo '<p>' . _e("This section allow you to configure default settings for the [paypal_button] shortcode") . '<a href="#shotcode-help-section">Click here for shortcode help section.</a></p>';
@@ -120,7 +125,10 @@ function wpdev_paypal_button_thankyou_url() {
 
 function wpdev_paypal_button_admin_output() {
     ?>
-    <div class="wrap">
+        <div id="dashboard-widgets" class="metabox-holder">
+            <div id="post-body">
+                <div id="dashboard-widgets-main-content">
+                    <div class="postbox-container" id="main-container" style="width:75%;">
         <h2>PayPal Button Default Settings</h2>
         <form method="post" action="options.php">
             <?php
@@ -150,6 +158,22 @@ function wpdev_paypal_button_admin_output() {
         <p><strong>amount:</strong> <br>
         (numeric) (optional) Product price to be charged. Yes, you can left empty for user to input amount. This can be used for donations.<br>
         <em>Possible Values</em>: Any numeric value</p>
+
+        <p><strong>quantity:</strong> <br>
+        (numeric or string) (optional) Specify quantity as number or range or possible comma separated values. Leave empty to let user specify any quantity.<br>
+        <em>Possible Values</em>: "1" or "1,5,10" or "1-10"</p>
+
+        <p><strong>quantity_txt_postfix:</strong> <br>
+        (string) (optional) Post fix text to be shown in quantity dropdown.<br>
+        <em>Possible Values</em>: " items" or " products"</p>
+
+        <p><strong>field_sep:</strong> <br>
+        (string) (optional) HTML code to separate the generated visible HTML fields. Use "&lt;br /&gt;" for new line.<br>
+        <em>Possible Values</em>: "&nbsp;" or "&lt;br /&gt;"</p>
+
+        <p><strong>echo_link:</strong> <br>
+        (boolean) (optional) Set to "1" for linked output<br>
+        <em>Possible Values</em>: 1 or 0</p>
 
         <p><strong>currency:</strong> <br>
         (string) (optional) Currency of the Transaction. <br>
@@ -196,6 +220,63 @@ function wpdev_paypal_button_admin_output() {
         <em>Possible Values</em>: A HTML Hexa-decimal code. e.g. FFFF00, 999999 etc </p>
 
     </div>
+                    </div>
+                    <div class="postbox-container" id="side-container" style="width:24%;">
+                        <div id="right-sortables" class="meta-box-sortables ui-sortable">
+                            <div id="ngg_meta_box" class="postbox ">                                
+                                <div class="handlediv" title="Click to toggle"><br></div><h3 class="hndle"><span>Need Support ?</span></h3>
+                                <div class="inside">
+                                    <p>We will get back to within 24 hours. Have doubts? Try us!</p>
+                                    <ul>
+                                         <li style="padding-left: 30px; min-height:30px; min-height:30px;line-height: 30px; background:transparent url(http://wpdevsnippets.com/plugin-images/icon_wordpress_blue.png) no-repeat scroll center left; text-decoration: none;">
+                                             <a href="http://wordpress.org/extend/plugins/paypal-pay-buy-donation-and-cart-buttons-shortcode/" target="_blank">Visit the WordPress plugin homepage</a>
+                                         </li>
+                                         <li style="padding-left: 30px; min-height:30px;line-height: 30px; background:transparent url(http://wpdevsnippets.com/plugin-images/icon_doc_find.png) no-repeat scroll center left; text-decoration: none;">
+                                             <a href="http://mohsinrasool.wordpress.com/2013/01/11/paypal-pay-buy-donation-cart-button-wordpress-shortcode/" target="_blank"><strong>Visit the Documentation page</strong></a>
+                                         </li>
+                                         <li style="padding-left: 30px; min-height:30px;line-height: 30px; background:transparent url(http://wpdevsnippets.com/plugin-images/icon_person_help.png) no-repeat scroll center left; text-decoration: none;">
+                                             <a href="http://wordpress.org/support/plugin/paypal-pay-buy-donation-and-cart-buttons-shortcode" target="_blank">Report a bug </a>
+                                         </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div id="ngg_meta_box" class="postbox ">                                
+                                <div class="handlediv" title="Click to toggle"><br></div><h3 class="hndle"><span>Do you like this Plugin?</span></h3>
+                                <div class="inside">
+                                    <p>This plugin is developed with the support of <a href="http://wpdevsnippets.com" target="_blank">WPDevSnippets</a>. Please contribute some of your time to appreciate us and spread the word.</p>
+                                    <ul>
+                                         <li style="padding-left: 30px; min-height:30px; min-height:30px;line-height: 30px;  background:transparent url(http://wpdevsnippets.com/plugin-images/icon_thumb_up.png) no-repeat scroll center left; text-decoration: none;">
+                                             <a href="http://wordpress.org/extend/plugins/paypal-pay-buy-donation-and-cart-buttons-shortcode/" target="_blank">Give it a good rating on WordPress.org</a>
+                                         </li>
+                                         <li style="padding-left: 30px; min-height:30px; min-height:30px;line-height: 30px;  background:transparent url(http://wpdevsnippets.com/plugin-images/icon_thumb_up.png) no-repeat scroll center left; text-decoration: none;">
+                                             <iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Ffacebook.com%2Fwpdevsnippets&amp;send=false&amp;layout=button_count&amp;width=150&amp;show_faces=false&amp;font&amp;colorscheme=light&amp;action=recommend&amp;height=21&amp;appId=493527070687256" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:150px; height:21px;" allowTransparency="true"></iframe>
+                                         </li>
+                                         <li style="padding-left: 30px; min-height:30px; min-height:30px;line-height: 30px;  background:transparent url(http://wpdevsnippets.com/plugin-images/icon_thumb_up.png) no-repeat scroll center left; text-decoration: none;">
+                                            <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://wpdevsnippets.com/wordpress-shortcode-paypal-pay-buy-donation-cart-buttons/" data-text="Awsome Customizable PayPal Payment Buttons Plugin from WPDevSnippets.com" data-related="WPDevSnippets">Tweet</a>
+                                            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>                                         </li>
+                                         <li style="padding-left: 30px; min-height:30px; min-height:30px;line-height: 30px;  background:transparent url(http://wpdevsnippets.com/plugin-images/icon_thumb_up.png) no-repeat scroll center left; text-decoration: none;">
+                                            <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+                                            <div class="g-plusone" data-size="medium" data-href="http://wpdevsnippets.com"></div>                                         
+                                         </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div id="ngg_meta_box" class="postbox ">
+                                
+                                <div class="handlediv" title="Click to toggle"><br></div><h3 class="hndle"><span>Appreciate by Cash?</span></h3>
+                                <div class="inside">
+                                    <p>This plug-in consumed several of our precious hours, if you use and like it, please donate a token of your appreciation!</p>
+                                    <div class="social" style="text-align:center;margin:15px 0 10px 0;">
+                                        <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DG2R3ZVH44FE4" target="_blank">
+                                        <img src="http://wpdevsnippets.com/plugin-images/btn_donate.gif" />
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
     <?php
 }
 
