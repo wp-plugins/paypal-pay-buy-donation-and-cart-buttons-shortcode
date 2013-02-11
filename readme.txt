@@ -4,7 +4,7 @@ Donate link: http://mohsinrasool.wordpress.com/2013/01/11/wordpress-shortcode-fo
 Tags: paypal, pay now, buy now, add to cart, shopping cart, donation, donate, pay button, cart button, paypal payment, paypal checkout, donate now
 Requires at least: 3.0.1
 Tested up to: 3.5.1
-Stable tag: 1.3
+Stable tag: 1.4
 Author: Mohsin Rasool
 License: GPLv2
 
@@ -23,6 +23,7 @@ This plugin adds "paypal_button" shortcode to display pay now, buy now, donation
 - **Set Thank you page** after successful payment to return the user back to your website
 - **Set Handling and Shipping charges**
 - **Allow buyer to add a note to order**
+- **Select language of your button.** Supports 17 widely used languages
 
 Possible usage of the plugin are as follows
 
@@ -155,6 +156,10 @@ You can use Logo URL field in the admin settings to place your logo on checkout 
 
 == Changelog ==
 
+= 1.4 =
+* Added support for 17 languages for PayPal buttons.
+* Added CSS classes for customization.
+
 = 1.3 =
 * Customize the Payment Button. Set your button's URL either in settings page or in shortcode
 * Fix Javascript error of quantity when used with buy now and cart buttons.
@@ -172,6 +177,9 @@ You can use Logo URL field in the admin settings to place your logo on checkout 
 * First Revision
 
 == Upgrade Notice ==
+
+= 1.4 =
+* Added support for multilingual buttons.
 
 = 1.3 =
 * Added support for customizing the PayPal button.

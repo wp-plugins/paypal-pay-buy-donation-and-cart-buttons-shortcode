@@ -28,6 +28,7 @@ function wpdev_register_paypal_button_settings() {
     register_setting('wpdev_paypal_button_options', 'wpdev_paypal_button_tax_rate');
     register_setting('wpdev_paypal_button_options', 'wpdev_paypal_button_shipping_charges');
     register_setting('wpdev_paypal_button_options', 'wpdev_paypal_button_size');
+    register_setting('wpdev_paypal_button_options', 'wpdev_paypal_button_lang');
 
     add_settings_section('wpdev_paypal_button_general_options', 'General Options', 'wpdev_paypal_button_general_options_code', 'wpdev_paypal_button_general_options');
     
@@ -35,6 +36,7 @@ function wpdev_register_paypal_button_settings() {
     add_settings_field('wpdev_paypal_button_email', 'Paypal E-Mail Address', 'wpdev_paypal_button_email', 'wpdev_paypal_button_general_options', 'wpdev_paypal_button_general_options');
     add_settings_field('wpdev_paypal_button_name', 'Business/Product Name', 'wpdev_paypal_button_name', 'wpdev_paypal_button_general_options', 'wpdev_paypal_button_general_options');
     add_settings_field('wpdev_paypal_button_currency', 'Currency', 'wpdev_paypal_button_currency', 'wpdev_paypal_button_general_options', 'wpdev_paypal_button_general_options');
+    add_settings_field('wpdev_paypal_button_lang', 'Language', 'wpdev_paypal_button_lang', 'wpdev_paypal_button_general_options', 'wpdev_paypal_button_general_options');
     add_settings_field('wpdev_paypal_button_tax_rate', 'Tax Rate', 'wpdev_paypal_button_tax_rate', 'wpdev_paypal_button_general_options', 'wpdev_paypal_button_general_options');
     add_settings_field('wpdev_paypal_button_shipping_charges', 'Shipping Charges', 'wpdev_paypal_button_shipping_charges', 'wpdev_paypal_button_general_options', 'wpdev_paypal_button_general_options');
     add_settings_field('wpdev_paypal_button_add_note', 'Enable Note', 'wpdev_paypal_button_add_note', 'wpdev_paypal_button_general_options', 'wpdev_paypal_button_general_options');
@@ -56,7 +58,34 @@ function wpdev_register_paypal_button_settings() {
 
 
 
-
+function wpdev_paypal_button_lang(){
+    $langs= array(
+        'da_DK/DK' => "Danish",
+        'nl_NL/NL' => "Dutch",
+        'en_US' => "English",
+        'fr_FR/FR' => "French",
+        'de_DE/DE' => "German",
+        'he_IL/IL' => "Hebrew",
+        'it_IT/IT' => "Italian",
+        'ja_JP/JP' => "Japanese",
+        'no_NO/NO' => "Norwegian",
+        'pl_PL/PL' => "Polish",
+        'pt_BR/BR' => "Portuguese",
+        'ru_RU/RU' => "Russion",
+        'es_ES/ES' => "Spanish",
+        'zh_XC/C2' => "Simplified Chinese",
+        'sv_SE/SE' => "Swedish",
+        'th_TH/TH' => "Thai",
+        'tr_TR/TR' => "Turkish"
+    );
+    $selected_lang = get_option('wpdev_paypal_button_lang');
+    echo '<select id="wpdev_paypal_button_lang" name="wpdev_paypal_button_lang">';
+    foreach ($langs as $key => $value) {
+        echo '<option value="'.$key.'" '.checked($selected_lang,$key, true).'>'.$value.'</option>';
+    }
+    echo '</select>';
+    
+}
 function wpdev_paypal_button_custom_url() {
     echo '<input id="wpdev_paypal_button_custom_url" name="wpdev_paypal_button_custom_url" type="text" value="' . get_option("wpdev_paypal_button_custom_url") . '" size=100 /> <br/>The URL to Custom Button instead of PayPal\'s default button. <br />';
 }

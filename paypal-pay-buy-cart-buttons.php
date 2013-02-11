@@ -3,7 +3,7 @@
 Plugin Name: Paypal Pay, Buy, Donation and Cart Buttons Shortcode
 Plugin URI: http://mohsinrasool.wordpress.com/2013/01/11/wordpress-shortcode-for-paypal-pay-buy-donation-and-cart-buttons/
 Description: Add a "paypal_button" shortcode to display pay now, buy now, donation and add to cart PayPal buttons with facility to customize they paypal checkout page.
-Version: 1.3
+Version: 1.4
 Author: Mohsin Rasool
 Author URI: http://mohsinrasool.wordpress.com
 License: GPL2
@@ -99,16 +99,23 @@ function wpdev_paypal_button($atts, $content = null) {
     
     $btn .= ($btn_size=='large') ? '_LG': '_SM';
     $bn = 'PP-'.$btn_text.'BF:'.$btn.'.gif:NonHostedGuest';
-    $btn_src = 'https://www.paypalobjects.com/en_US/i/btn/'.$btn.'.gif';
+    $lang = get_option('wpdev_paypal_button_lang');   
     
+
     $paypal_values['cmd'] = $cmd;
     $paypal_values['item_number'] = $id;
     $paypal_values['business'] = $email;
-    $paypal_values['lc'] = 'US';
     $paypal_values['item_name'] = $name;
     $paypal_values['currency_code'] = $currency;
+    $paypal_values['lc'] = 'US';
     $paypal_values['no_note'] = (($add_note=='yes') ? 0 :1);
     $paypal_values['bn'] = $bn;
+    
+    if(!empty($lang)){
+        $lang_arr = explode('/',$lang);
+        if(!empty($lang_arr[1]))
+            $paypal_values['lc'] = $lang_arr[1];
+    }
     
     if(!empty($button_subtype))
         $paypal_values['button_subtype'] = $button_subtype;
@@ -150,7 +157,12 @@ function wpdev_paypal_button($atts, $content = null) {
         $output = 'https://www.paypal.com/cgi-bin/webscr?'.http_build_query($paypal_values);
     }
     else {
-        $output = '<form action="https://www.paypal.com/cgi-bin/webscr" method="post">';
+        if(wpdev_is_url_exists('https://www.paypalobjects.com/'.$lang.'/i/btn/'.$btn.'.gif') )
+            $btn_src = 'https://www.paypalobjects.com/'.$lang.'/i/btn/'.$btn.'.gif';
+        else
+            $btn_src = 'https://www.paypalobjects.com/en_US/i/btn/'.$btn.'.gif';
+
+        $output = '<form action="https://www.paypal.com/cgi-bin/webscr" method="post" class="paypal_button_form">';
         foreach($paypal_values as $name =>$val){
             switch($name){
                 case 'amount':
@@ -196,7 +208,7 @@ function wpdev_paypal_button($atts, $content = null) {
         if(!empty($quantity) && ($type=='donation' || $type=='donate') ){
             $rand = rand(111,999);        
             $output .= '
-            <input type="image" src="'.$btn_src.'" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!" 
+            <input type="image" class="paypal_button_form_submit" src="'.$btn_src.'" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!" 
                 onclick="return adjustPayPalQuantity'.$rand.'(this);">
             <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
             </form>
@@ -216,7 +228,7 @@ function wpdev_paypal_button($atts, $content = null) {
         }
         else {
             $output .= '
-            <input type="image" src="'.$btn_src.'" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!" >
+            <input type="image" class="paypal_button_form_submit" src="'.$btn_src.'" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!" >
             <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
             </form>
             ';
@@ -229,6 +241,16 @@ function wpdev_paypal_button($atts, $content = null) {
 
 add_shortcode("paypal_button", "wpdev_paypal_button");
 
+function wpdev_is_url_exists($url){
+ $file = @fopen($url,'r');
+ if(!$file) {
+     echo 'false';
+     return false;
+ }
+ echo $url.'true<br/>';
+ return true;
+}
+
 // Plugin Activation Hook
 function wpdev_paypal_button_activate(){
     // Check if its a first install
@@ -240,5 +262,9 @@ function wpdev_paypal_button_activate(){
         add_option( 'wpdev_paypal_button_display_cc', 'yes' );
         add_option( 'wpdev_paypal_button_size', 'large' );
     }
+    
+    if(!get_option('wpdev_paypal_button_lang'))
+        add_option( 'wpdev_paypal_button_lang', 'en_US' );
+    
 }
 register_activation_hook( __FILE__, 'wpdev_paypal_button_activate' );
