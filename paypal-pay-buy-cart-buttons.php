@@ -159,8 +159,14 @@ function wpdev_paypal_button($atts, $content = null) {
     else {
         if(wpdev_is_url_exists('https://www.paypalobjects.com/'.$lang.'/i/btn/'.$btn.'.gif') )
             $btn_src = 'https://www.paypalobjects.com/'.$lang.'/i/btn/'.$btn.'.gif';
-        else
-            $btn_src = 'https://www.paypalobjects.com/en_US/i/btn/'.$btn.'.gif';
+        else {
+            //$lang_arr = explode('/', $lang);
+            if(isset($lang_arr[0]) && wpdev_is_url_exists('https://www.paypalobjects.com/'.$lang_arr[0].'/i/btn/'.$btn.'.gif')) {
+                $btn_src = 'https://www.paypalobjects.com/'.$lang_arr[0].'/i/btn/'.$btn.'.gif';
+            }
+            else
+                $btn_src = 'https://www.paypalobjects.com/en_US/i/btn/'.$btn.'.gif';
+        }
 
         $output = '<form action="https://www.paypal.com/cgi-bin/webscr" method="post" class="paypal_button_form">';
         foreach($paypal_values as $name =>$val){
@@ -244,10 +250,8 @@ add_shortcode("paypal_button", "wpdev_paypal_button");
 function wpdev_is_url_exists($url){
  $file = @fopen($url,'r');
  if(!$file) {
-     echo 'false';
      return false;
  }
- echo $url.'true<br/>';
  return true;
 }
 
