@@ -144,8 +144,6 @@ function wpdev_paypal_button($atts, $content = null) {
     if(!empty($thankyou_page_url))
         $paypal_values['return'] = $thankyou_page_url;
 
-    if(!empty($btn_url))
-        $btn_src = $btn_url;
     
     if($echo_link) {
         
@@ -157,7 +155,9 @@ function wpdev_paypal_button($atts, $content = null) {
         $output = 'https://www.paypal.com/cgi-bin/webscr?'.http_build_query($paypal_values);
     }
     else {
-        if(wpdev_is_url_exists('https://www.paypalobjects.com/'.$lang.'/i/btn/'.$btn.'.gif') )
+        if(!empty($btn_url))
+            $btn_src = $btn_url;
+        else if(wpdev_is_url_exists('https://www.paypalobjects.com/'.$lang.'/i/btn/'.$btn.'.gif') )
             $btn_src = 'https://www.paypalobjects.com/'.$lang.'/i/btn/'.$btn.'.gif';
         else {
             //$lang_arr = explode('/', $lang);
