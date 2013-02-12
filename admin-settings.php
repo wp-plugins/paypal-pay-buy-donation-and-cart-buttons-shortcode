@@ -81,7 +81,7 @@ function wpdev_paypal_button_lang(){
     $selected_lang = get_option('wpdev_paypal_button_lang');
     echo '<select id="wpdev_paypal_button_lang" name="wpdev_paypal_button_lang">';
     foreach ($langs as $key => $value) {
-        echo '<option value="'.$key.'" '.checked($selected_lang,$key, true).'>'.$value.'</option>';
+        echo '<option value="'.$key.'" '.selected($selected_lang,$key, false).'>'.$value.'</option>';
     }
     echo '</select>';
     
