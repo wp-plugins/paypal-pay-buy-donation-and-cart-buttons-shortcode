@@ -4,7 +4,7 @@ Donate link: http://mohsinrasool.wordpress.com/2013/01/11/wordpress-shortcode-fo
 Tags: paypal, pay now, buy now, add to cart, shopping cart, donation, donate, pay button, cart button, paypal payment, paypal checkout, donate now
 Requires at least: 3.0.1
 Tested up to: 3.5.1
-Stable tag: 1.4
+Stable tag: 1.5
 Author: Mohsin Rasool
 License: GPLv2
 
@@ -24,6 +24,7 @@ This plugin adds "paypal_button" shortcode to display pay now, buy now, donation
 - **Set Handling and Shipping charges**
 - **Allow buyer to add a note to order**
 - **Select language of your button.** Supports 17 widely used languages
+- **Both Admin generated amount (based on quantity) and user filled amount payments**
 
 Possible usage of the plugin are as follows
 
@@ -73,8 +74,16 @@ Set your PayPal E-Mail address and Checkout page customization in Settings->PayP
     (string) (optional) HTML code to separate the generated visible HTML fields. Use "<br />" for new line.
     Possible Values: "&nbsp;" or "<br />"
 
+    **amount_prompt**: 
+    (boolean) (optional) Setting to "1" will enable user to enter amount they would like to pay.
+    Possible Values: 1 or 0
+
     **echo_link**: 
     (boolean) (optional) Set to "1" for linked output
+    Possible Values: 1 or 0
+
+    **open_new_window**: 
+    (boolean) (optional) Set to "1" to open payment page in a new window
     Possible Values: 1 or 0
 
     **currency**: 
@@ -156,6 +165,11 @@ You can use Logo URL field in the admin settings to place your logo on checkout 
 
 == Changelog ==
 
+= 1.5 =
+* Added filters
+* Added feature to open payment page in a new window
+* Added feature to allow for user entered payments.
+
 = 1.4 =
 * Added support for 17 languages for PayPal buttons.
 * Added CSS classes for customization.
@@ -177,6 +191,11 @@ You can use Logo URL field in the admin settings to place your logo on checkout 
 * First Revision
 
 == Upgrade Notice ==
+
+= 1.5 =
+* Added filters
+* Added feature to open payment page in a new window
+* Added feature to allow for user entered payments.
 
 = 1.4 =
 * Added support for multilingual buttons.

@@ -3,11 +3,10 @@
 Plugin Name: Paypal Pay, Buy, Donation and Cart Buttons Shortcode
 Plugin URI: http://mohsinrasool.wordpress.com/2013/01/11/wordpress-shortcode-for-paypal-pay-buy-donation-and-cart-buttons/
 Description: Add a "paypal_button" shortcode to display pay now, buy now, donation and add to cart PayPal buttons with facility to customize they paypal checkout page.
-Version: 1.4
+Version: 1.5
 Author: Mohsin Rasool
 Author URI: http://mohsinrasool.wordpress.com
 License: GPL2
-    Copyright 2013  Mohsin Rasool  (email : mohsin.rasool@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as 
@@ -25,12 +24,13 @@ License: GPL2
 include 'admin-settings.php';
 
 function wpdev_paypal_button($atts, $content = null) {  
-    extract(shortcode_atts(array(  
+    $final_atts = shortcode_atts(array(  
     'type'=>  get_option('wpdev_paypal_button_type'),
     'email' => get_option('wpdev_paypal_button_email'),
     'name' => get_option('wpdev_paypal_button_name'),
     'id' => '',
     'amount' => '',
+    'amount_prompt' => 0,
     'quantity' => '1',
     'echo_link' => false,
     'quantity_txt_postfix' => '',
@@ -42,6 +42,7 @@ function wpdev_paypal_button($atts, $content = null) {
     'btn_display_cc' => get_option('wpdev_paypal_button_display_cc'),
     'btn_text' => '',
     'btn_url' => get_option('wpdev_paypal_button_custom_url'),
+    'open_new_window' => 0,
     'add_note'=>get_option('wpdev_paypal_button_add_note'),
     'thankyou_page_url'=> get_option('wpdev_paypal_button_thankyou_url'),
     'checkout_logo_url' => get_option('wpdev_paypal_button_logo_url'),
@@ -49,7 +50,8 @@ function wpdev_paypal_button($atts, $content = null) {
     'checkout_header_bg_color' => get_option('wpdev_paypal_button_checkout_header_bg_color'),
     'checkout_bg_color' => get_option('wpdev_paypal_button_checkout_bg_color'),
     'button_subtype' => '',
-    ), $atts));  
+    ), $atts);  
+    extract($final_atts);
     
     global $post;
     $paypal_values = array();
@@ -155,6 +157,7 @@ function wpdev_paypal_button($atts, $content = null) {
         $output = 'https://www.paypal.com/cgi-bin/webscr?'.http_build_query($paypal_values);
     }
     else {
+        $rand = rand(111,999);        
         if(!empty($btn_url))
             $btn_src = $btn_url;
         else if(wpdev_is_url_exists('https://www.paypalobjects.com/'.$lang.'/i/btn/'.$btn.'.gif') )
@@ -168,11 +171,15 @@ function wpdev_paypal_button($atts, $content = null) {
                 $btn_src = 'https://www.paypalobjects.com/en_US/i/btn/'.$btn.'.gif';
         }
 
-        $output = '<form action="https://www.paypal.com/cgi-bin/webscr" method="post" class="paypal_button_form">';
+        $output = '<form action="https://www.paypal.com/cgi-bin/webscr" method="post" class="paypal_button_form" '.($open_new_window ? "target='_blank'": "").'>';
         foreach($paypal_values as $name =>$val){
             switch($name){
                 case 'amount':
-                    $output .= '<input type="hidden" class="paypal_amount" name="'.$name.'" value="'.$val.'">';
+
+                    if($amount_prompt) 
+                        $output .= '<input type="text" class="paypal_amount" name="'.$name.'" value="'.$val.'">'.html_entity_decode($field_sep);
+                    else
+                        $output .= '<input type="hidden" class="paypal_amount" name="'.$name.'" value="'.$val.'">';
                     $output .= '<input type="hidden" class="temp_amount" name="temp_'.$name.'" value="'.$val.'">';
                     break;
                 default:
@@ -185,7 +192,7 @@ function wpdev_paypal_button($atts, $content = null) {
 
             $quantity = explode('-',$quantity);
             if(is_numeric($quantity[0]) && is_numeric($quantity[1]) && $quantity[0]<$quantity[1]) {
-                $output .= '<select name="'.$quantity_field.'" class="paypal_quantity">';
+                $output .= '<select name="'.$quantity_field.'" onchange="return '.  apply_filters('paypal_button_cal_amount','adjustPayPalQuantity'.$rand.'(this);').'" class="paypal_quantity">';
                 for($i=$quantity[0]; $i<=$quantity[1]; $i++)
                     $output .= '<option value="'.$i.'"> '.$i.$quantity_txt_postfix.' </option>';
                 $output .= '</select>'.html_entity_decode($field_sep);
@@ -196,7 +203,7 @@ function wpdev_paypal_button($atts, $content = null) {
         else if(strpos($quantity, ',')){
             $quantity = explode(',',$quantity);
             if(count($quantity)>0) {
-                $output .= '<select name="'.$quantity_field.'" class="paypal_quantity">';
+                $output .= '<select name="'.$quantity_field.'" onchange="return '.  apply_filters('paypal_button_cal_amount','adjustPayPalQuantity'.$rand.'(this);').'" class="paypal_quantity">';
                 for($i=0; $i<count($quantity); $i++){
                     if(is_numeric($quantity[$i]))
                         $output .= '<option value="'.$quantity[$i].'"> '.$quantity[$i].$quantity_txt_postfix.' </option>';
@@ -212,19 +219,18 @@ function wpdev_paypal_button($atts, $content = null) {
             $output .= '<input type="hidden" name="'.$quantity_field.'" value="1">';
 
         if(!empty($quantity) && ($type=='donation' || $type=='donate') ){
-            $rand = rand(111,999);        
             $output .= '
             <input type="image" class="paypal_button_form_submit" src="'.$btn_src.'" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!" 
-                onclick="return adjustPayPalQuantity'.$rand.'(this);">
-            <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                onclick="return '.  apply_filters('paypal_button_cal_amount','adjustPayPalQuantity'.$rand.'(this);').'">
+            <img alt="" style="border:0;display:none" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
             </form>
             ';
         
             $output .= '
             <script type="text/javascript">
                 function adjustPayPalQuantity'.$rand.'(elem){
-                    if(jQuery(elem).siblings(".paypal_quantity")) {
-                        var qty = jQuery(elem).siblings(".paypal_quantity").val();
+                    var qty = jQuery(elem).parent().find(".paypal_quantity").val();
+                    if(typeof qty != "undefined" && !isNaN(parseInt(qty))) {
                         var amount = jQuery(elem).siblings(".temp_amount").val();
                         jQuery(elem).siblings(".paypal_amount").val(qty * amount);
                         return true;
@@ -242,7 +248,7 @@ function wpdev_paypal_button($atts, $content = null) {
 		
     }
     
-    return $output;
+    return apply_filters('paypal_button_output',$output, $final_atts);
 }  
 
 add_shortcode("paypal_button", "wpdev_paypal_button");

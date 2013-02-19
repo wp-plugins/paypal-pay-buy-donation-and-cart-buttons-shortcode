@@ -200,8 +200,16 @@ function wpdev_paypal_button_admin_output() {
         (string) (optional) HTML code to separate the generated visible HTML fields. Use "&lt;br /&gt;" for new line.<br>
         <em>Possible Values</em>: "&nbsp;" or "&lt;br /&gt;"</p>
 
+        <p><strong>amount_prompt:</strong> <br>
+        (boolean) (optional) Setting to "1" will enable user to enter amount they would like to pay.<br>
+        <em>Possible Values</em>: 1 or 0</p>
+
         <p><strong>echo_link:</strong> <br>
         (boolean) (optional) Set to "1" for linked output<br>
+        <em>Possible Values</em>: 1 or 0</p>
+
+        <p><strong>open_new_window:</strong> <br>
+        (boolean) (optional) Set to "1" to open payment page in a new window<br>
         <em>Possible Values</em>: 1 or 0</p>
 
         <p><strong>currency:</strong> <br>
