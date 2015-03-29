@@ -26,6 +26,8 @@ This plugin adds "paypal_button" shortcode to display pay now, buy now, donation
 - **Select language of your button.** Supports 17 widely used languages
 - **Both Admin generated amount (based on quantity) and user filled amount payments**
 
+Plugin also adds a [paypal_view_cart_link] shortcode to be used to create view cart buttons.
+
 Possible usage of the plugin are as follows
 
     Pay Now Button: [paypal_button type="paynow" amount="100"]
@@ -34,11 +36,14 @@ Possible usage of the plugin are as follows
     Add to cart Button: [paypal_button type="cart" name="Computer Table" amount="100"]
     Payment Link: [paypal_button type="buynow" name="WordPres Portfolio Theme" amount="100" echo_link=1]
 
+    View Cart Link: <a href="[paypal_view_cart_link]">View Cart</a>
+
 Set your PayPal E-Mail address and Checkout page customization in Settings->PayPal Buttons.
 
 = Usage =
 
     [paypal_button type="paynow|buynow|donate|cart" amount="100"]
+    <a href="[paypal_view_cart_link]">View Cart</a>
 
 = Attributes =
 
